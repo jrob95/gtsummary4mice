@@ -13,7 +13,7 @@ Additional functions for using `tbl_uvsummary` with `mice::mids`
 objects.
 
 The goal of gtsummary4mice is to allow used of `mice` generating
-multiply imputed data sets `mids` to quickly and easily
+multiply imputed data sets `mids` quickly and easily
 
 ## Installation
 
@@ -44,4 +44,6 @@ library(mice)
 #> 
 #>     cbind, rbind
 library(gtsummary)
+
+# an example...
 ```
