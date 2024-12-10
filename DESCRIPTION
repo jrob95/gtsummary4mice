@@ -18,6 +18,7 @@ LazyData: true
 Imports: 
     cards,
     cardx,
+    cli,
     dplyr,
     glue,
     gtsummary,

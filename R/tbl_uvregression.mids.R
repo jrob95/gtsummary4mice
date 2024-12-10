@@ -96,7 +96,7 @@ tbl_uvregression.mids <- function(data,
                                   formula = "{y} ~ {x}",
                                   add_estimate_to_reference_rows = FALSE,
                                   conf.int = TRUE, ...) {
-  gtsummary::set_cli_abort_call()
+  set_cli_abort_call()
   y <- enquo(y)
   x <- enquo(x)
   method.args <- enquo(method.args)
@@ -107,52 +107,52 @@ tbl_uvregression.mids <- function(data,
   # setting default values -----------------------------------------------------
   if (missing(pvalue_fun)) {
     pvalue_fun <-
-      gtsummary::get_deprecated_theme_element("tbl_regression-arg:pvalue_fun") %||%
-      gtsummary::get_theme_element("pkgwide-fn:pvalue_fun", default = pvalue_fun)
+      get_deprecated_theme_element("tbl_regression-arg:pvalue_fun") %||%
+      get_theme_element("pkgwide-fn:pvalue_fun", default = pvalue_fun)
   }
   pvalue_fun <- as_function(pvalue_fun, arg = "pvalue_fun")
 
-  gtsummary::check_scalar_logical(exponentiate)
+  check_scalar_logical(exponentiate)
   if (missing(estimate_fun)) {
     estimate_fun <-
-      gtsummary::get_theme_element("tbl_regression-arg:estimate_fun", default = estimate_fun)
+      get_theme_element("tbl_regression-arg:estimate_fun", default = estimate_fun)
   }
   estimate_fun <- as_function(estimate_fun, arg = "estimate_fun")
 
   if (missing(conf.int)) {
-    conf.int <- gtsummary:::get_theme_element("tbl_regression-arg:conf.int", default = conf.int)
+    conf.int <- get_theme_element("tbl_regression-arg:conf.int", default = conf.int)
   }
   if (missing(conf.level)) {
-    conf.level <- gtsummary::get_theme_element("tbl_regression-arg:conf.level", default = conf.level)
+    conf.level <- get_theme_element("tbl_regression-arg:conf.level", default = conf.level)
   }
   if (missing(add_estimate_to_reference_rows)) {
     add_estimate_to_reference_rows <-
-      gtsummary::get_theme_element("tbl_regression-arg:add_estimate_to_reference_rows",
+      get_theme_element("tbl_regression-arg:add_estimate_to_reference_rows",
                         default = add_estimate_to_reference_rows)
   }
 
   # check inputs ---------------------------------------------------------------
-  gtsummary::check_not_missing(method)
-  gtsummary::check_scalar_logical(hide_n)
-  gtsummary::check_scalar_logical(add_estimate_to_reference_rows)
-  gtsummary::check_scalar_logical(conf.int)
-  gtsummary::check_scalar_range(conf.level, range = c(0, 1))
-  gtsummary::check_uvregression_formula(formula)
+  check_not_missing(method)
+  check_scalar_logical(hide_n)
+  check_scalar_logical(add_estimate_to_reference_rows)
+  check_scalar_logical(conf.int)
+  check_scalar_range(conf.level, range = c(0, 1))
+  check_uvregression_formula(formula)
 
   # check that only one of arguments x and y is specified
-  if ((!gtsummary::is_quo_empty(x) && !gtsummary::is_quo_empty(y)) || (gtsummary::is_quo_empty(x) && gtsummary::is_quo_empty(y))) {
+  if ((!is_quo_empty(x) && !is_quo_empty(y)) || (is_quo_empty(x) && is_quo_empty(y))) {
     cli::cli_abort(
       "Must specify one and only one of arguments {.arg x} and {.arg y}.",
-      call = gtsummary::get_cli_abort_call()
+      call = get_cli_abort_call()
     )
   }
 
 
   # process inputs -------------------------------------------------------------
-  x <- gtsummary::.process_x_and_y_args_as_string(complete_data, x)
-  y <- gtsummary::.process_x_and_y_args_as_string(complete_data, y)
-  gtsummary::check_scalar(x, allow_empty = TRUE)
-  gtsummary::check_scalar(y, allow_empty = TRUE)
+  x <- .process_x_and_y_args_as_string(complete_data, x)
+  y <- .process_x_and_y_args_as_string(complete_data, y)
+  check_scalar(x, allow_empty = TRUE)
+  check_scalar(y, allow_empty = TRUE)
 
 
   cards::process_selectors(
@@ -181,7 +181,7 @@ tbl_uvregression.mids <- function(data,
     error_msg = "Each value passed in the {.arg label} argument must be a string of length {.val {1}}."
   )
 
-  gtsummary::.check_haven_labelled(as.data.frame(complete_data)[include])
+  .check_haven_labelled(as.data.frame(complete_data)[include])
 
   # fill in labels
   label <-
@@ -196,15 +196,14 @@ tbl_uvregression.mids <- function(data,
   lst_models <-
     include |>
     # construct a formula for each model
-    gtsummary::.construct_uvregression_formulas(formula = formula, x = x, y = y) |>
+    .construct_uvregression_formulas(formula = formula, x = x, y = y) |>
     # build models
-    gtsummary::.construct_uvregression_models_mids(data = data, method = method, method.args = !!method.args)
-
+    .construct_uvregression_models_mids(data = data, method = method, method.args = !!method.args)
 
   # summarize each regression model with `tbl_regression()` --------------------
   lst_tbls <-
     lst_models |>
-    gtsummary::.construct_uvregression_tbls(
+    .construct_uvregression_tbls(
       label = label, exponentiate = exponentiate, tidy_fun = tidy_fun,
       show_single_row = show_single_row, conf.level = conf.level,
       estimate_fun = estimate_fun, pvalue_fun = pvalue_fun,
@@ -272,7 +271,7 @@ mice_in_tbl_uvregression <- function(data,
   environment(formula) <- environment()
   formula_expr <- deparse(as.formula(formula))  # This converts the formula to text
   # use function from cardx to convert method args to list, which can then become text for glue function
-  method.args <- cardx::.as_list_of_exprs({{ method.args }})
+  method.args <- .as_list_of_exprs({{ method.args }})
 
   # confirm method.args is a list, and then convert to text
   if (!is.null(method.args) && is.list(method.args)) {
