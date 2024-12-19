@@ -36,9 +36,9 @@
 #'   Specify one and only one of `y` or `x`.
 #' @param formula (`string`)\cr
 #'   String of the model formula.
-#'   Uses [`glue::glue()`] syntax. Default is `"{y} ~ {x}"`, where `{y}`
-#'   is the dependent variable, and `{x}` represents a single covariate. For a
-#'   random intercept model, the formula may be `formula = "{y} ~ {x} + (1 | gear)"`.
+#'   Uses [`glue::glue()`] syntax. Default is `"\\{y\\} ~ \\{x\\}"`, where `\\{y\\}`
+#'   is the dependent variable, and `\\{x\\}` represents a single covariate. For a
+#'   random intercept model, the formula may be `formula = "\\{y\\} ~ \\{x\\} + (1 | gear)"`.
 #' @param method.args (named `list`)\cr
 #'   Named list of arguments assed to `method`.
 #' @param hide_n (scalar `logical`)\cr
@@ -51,28 +51,25 @@
 #'
 #' @return A `tbl_uvregression` object
 #'
-#' @examplesIf gtsummary:::is_pkg_installed(c("cardx", "broom", "broom.helpers"), reference_pkg = "gtsummary")
-#' # Example 1 ----------------------------------
-#' tbl_uvregression(
-#'   trial,
-#'   method = glm,
-#'   y = response,
-#'   method.args = list(family = binomial),
-#'   exponentiate = TRUE,
-#'   include = c("age", "grade")
+#' @examplesIf gtsummary:::is_pkg_installed(c("cardx", "broom", "broom.helpers, mice"), ref = "gtsummary")
+#'   # Create a sample dataset with missing values
+#' set.seed(123)
+#' data <- data.frame(
+#'   outcome = rbinom(100, 1, 0.5),
+#'   predictor1 = rnorm(100),
+#'   predictor2 = rnorm(100)
 #' )
+#' data$predictor2[sample(1:100, 20)] <- NA  # Introduce missing values
 #'
-#' # Example 2 ----------------------------------
-#' # rounding pvalues to 2 decimal places
-#' library(survival)
+#' # Create mids object using mice
+#' imputed_data <- mice::mice(data, m = 5, maxit = 5, seed = 123, printFlag = FALSE)
 #'
-#' tbl_uvregression(
-#'   trial,
-#'   method = coxph,
-#'   y = Surv(ttdeath, death),
-#'   exponentiate = TRUE,
-#'   include = c("age", "grade", "response"),
-#'   pvalue_fun = label_style_pvalue(digits = 2)
+#' # Run tbl_uvregression on mids object
+#' tbl <- tbl_uvregression(
+#'   imputed_data,
+#'   method = glm,
+#'   y = outcome,
+#'   exponentiate = TRUE
 #' )
 NULL
 
@@ -172,7 +169,14 @@ tbl_uvregression.mids <- function(data,
   # styler: off
   # remove any variables specified in arguments `x`/`y` from include
   include <- include |>
-    setdiff(tryCatch(stats::reformulate(c(x, y)) |> all.vars(), error = \(e) character()))
+    # remove the x/y variable from the list
+    setdiff(tryCatch(stats::reformulate(c(x, y)) |> all.vars(), error = \(e) character(0L))) |>
+    # remove any other columns listed in the formula
+    setdiff(tryCatch(glue::glue_data(.x = list(y = 1, x = 1), formula) |> stats::as.formula() |> all.vars(), error = \(e) character(0L)))
+  if (is_empty(include)) {
+    cli::cli_abort("The {.arg include} argument cannot be empty.", call = get_cli_abort_call())
+  }
+
   # remove any variables not in include
   show_single_row <-
     if (is_empty(x)) intersect(show_single_row, include)

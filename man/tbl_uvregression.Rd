@@ -5,8 +5,6 @@
 \alias{tbl_uvregression.mids}
 \title{Univariable regression model summary}
 \usage{
-tbl_uvregression(data, ...)
-
 \method{tbl_uvregression}{mids}(
   data,
   y = NULL,
@@ -31,8 +29,6 @@ tbl_uvregression(data, ...)
 \arguments{
 \item{data}{(`data.frame`, `survey.design`, `mids`)\cr
 A data frame or a survey design object.}
-
-\item{...}{Additional arguments passed to \code{\link[broom.helpers:tidy_plus_plus]{broom.helpers::tidy_plus_plus()}}.}
 
 \item{y, x}{(`expression`, `string`)\cr
 Model outcome (e.g. `y=recurrence` or `y=Surv(time, recur)`) or
@@ -83,9 +79,9 @@ Function to round and format p-values. Default is \code{\link[gtsummary:label_st
 
 \item{formula}{(`string`)\cr
 String of the model formula.
-Uses [`glue::glue()`] syntax. Default is `"{y} ~ {x}"`, where `{y}`
-is the dependent variable, and `{x}` represents a single covariate. For a
-random intercept model, the formula may be `formula = "{y} ~ {x} + (1 | gear)"`.}
+Uses [`glue::glue()`] syntax. Default is `"\\{y\\} ~ \\{x\\}"`, where `\\{y\\}`
+is the dependent variable, and `\\{x\\}` represents a single covariate. For a
+random intercept model, the formula may be `formula = "\\{y\\} ~ \\{x\\} + (1 | gear)"`.}
 
 \item{add_estimate_to_reference_rows}{(scalar \code{logical})\cr
 Add a reference value. Default is \code{FALSE}.}
@@ -93,6 +89,8 @@ Add a reference value. Default is \code{FALSE}.}
 \item{conf.int}{(scalar \code{logical})\cr
 Logical indicating whether or not to include a confidence
 interval in the output. Default is \code{TRUE}.}
+
+\item{...}{Additional arguments passed to \code{\link[broom.helpers:tidy_plus_plus]{broom.helpers::tidy_plus_plus()}}.}
 }
 \value{
 A `tbl_uvregression` object
@@ -145,28 +143,25 @@ to print the random components.
 }
 
 \examples{
-\dontshow{if (gtsummary:::is_pkg_installed(c("cardx", "broom", "broom.helpers"), reference_pkg = "gtsummary")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Example 1 ----------------------------------
-tbl_uvregression(
-  trial,
-  method = glm,
-  y = response,
-  method.args = list(family = binomial),
-  exponentiate = TRUE,
-  include = c("age", "grade")
+\dontshow{if (gtsummary:::is_pkg_installed(c("cardx", "broom", "broom.helpers, mice"), ref = "gtsummary")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+  # Create a sample dataset with missing values
+set.seed(123)
+data <- data.frame(
+  outcome = rbinom(100, 1, 0.5),
+  predictor1 = rnorm(100),
+  predictor2 = rnorm(100)
 )
+data$predictor2[sample(1:100, 20)] <- NA  # Introduce missing values
 
-# Example 2 ----------------------------------
-# rounding pvalues to 2 decimal places
-library(survival)
+# Create mids object using mice
+imputed_data <- mice::mice(data, m = 5, maxit = 5, seed = 123, printFlag = FALSE)
 
-tbl_uvregression(
-  trial,
-  method = coxph,
-  y = Surv(ttdeath, death),
-  exponentiate = TRUE,
-  include = c("age", "grade", "response"),
-  pvalue_fun = label_style_pvalue(digits = 2)
+# Run tbl_uvregression on mids object
+tbl <- tbl_uvregression(
+  imputed_data,
+  method = glm,
+  y = outcome,
+  exponentiate = TRUE
 )
 \dontshow{\}) # examplesIf}
 }
