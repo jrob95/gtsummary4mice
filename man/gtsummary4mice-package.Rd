@@ -6,7 +6,7 @@
 \alias{gtsummary4mice-package}
 \title{gtsummary4mice: `tbl_univsummary` method for `mice::mids` objects}
 \description{
-Create univariate analyses tables for `mice::mids`, imputed data objects generated using `mice::mice`.
+Create univariate analyses tables for `mice::mids`, imputed data objects generated using `mice::mice`. Adds S3 method to the `gtsummary` summary package.
 }
 \seealso{
 Useful links:
@@ -18,6 +18,11 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Jack Roberts \email{jack.roberts@connect.qut.edu.au} (\href{https://orcid.org/0000-0003-3519-4725}{ORCID})
+
+Authors:
+\itemize{
+  \item Daniel D. Sjoberg (\href{https://orcid.org/0000-0003-0862-2018}{ORCID})
+}
 
 }
 \keyword{internal}

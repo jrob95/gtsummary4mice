@@ -7,16 +7,17 @@ Authors@R: c(
            family = "Roberts", 
            email = "jack.roberts@connect.qut.edu.au",
            role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0003-3519-4725")))
+           comment = c(ORCID = "0000-0003-3519-4725")),
+    person("Daniel D.", "Sjoberg", role = c("aut"),
+           comment = c(ORCID = "0000-0003-0862-2018")))
 URL: https://github.com/jrob95/gtsummary4mice
 BugReports: https://github.com/jrob95/gtsummary4mice/issues
 Maintainer: The package maintainer <jack.roberts@connect.qut.edu.au>
-Description: Create univariate analyses tables for  `mice::mids`, imputed data objects generated using `mice::mice`.
+Description: Create univariate analyses tables for  `mice::mids`, imputed data objects generated using `mice::mice`. Adds S3 method to the `gtsummary` summary package.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    broom.helpers,
     cards,
     cardx,
     cli,
@@ -28,7 +29,10 @@ Imports:
     purrr,
     rlang,
     stats,
-    testthat,
-    tidyr
+    tidyr,
+    broom.helpers
 RoxygenNote: 7.3.2
 Config/testthat/edition: 3
+Suggests: 
+    testthat (>= 3.2.0)
+
