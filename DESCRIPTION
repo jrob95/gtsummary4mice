@@ -1,7 +1,7 @@
 Package: gtsummary4mice
 Type: Package
 Title: `tbl_univsummary` method for `mice::mids` objects
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: c(
     person(given = "Jack",
            family = "Roberts", 
