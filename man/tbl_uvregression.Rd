@@ -5,6 +5,8 @@
 \alias{tbl_uvregression.mids}
 \title{Univariable regression model summary}
 \usage{
+tbl_uvregression(data, ...)
+
 \method{tbl_uvregression}{mids}(
   data,
   y = NULL,
@@ -29,6 +31,8 @@
 \arguments{
 \item{data}{(`data.frame`, `survey.design`, `mids`)\cr
 A data frame or a survey design object.}
+
+\item{...}{Additional arguments passed to \code{\link[broom.helpers:tidy_plus_plus]{broom.helpers::tidy_plus_plus()}}.}
 
 \item{y, x}{(`expression`, `string`)\cr
 Model outcome (e.g. `y=recurrence` or `y=Surv(time, recur)`) or
@@ -89,8 +93,6 @@ Add a reference value. Default is \code{FALSE}.}
 \item{conf.int}{(scalar \code{logical})\cr
 Logical indicating whether or not to include a confidence
 interval in the output. Default is \code{TRUE}.}
-
-\item{...}{Additional arguments passed to \code{\link[broom.helpers:tidy_plus_plus]{broom.helpers::tidy_plus_plus()}}.}
 }
 \value{
 A `tbl_uvregression` object

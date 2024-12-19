@@ -83,6 +83,7 @@
     set_names(include)
 }
 
+
 check_uvregression_formula <- function(formula) {
   # first formula must be a string
   check_string(formula)
