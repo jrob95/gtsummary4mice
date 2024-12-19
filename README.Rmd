@@ -38,8 +38,8 @@ pak::pak("jrob95/gtsummary4mice")
 This how to use the `tbl_uvsummary` with objects generated from `mice::mice`
 
 ```{r example}
-library(gtsummary4mice)
 library(gtsummary)
+library(gtsummary4mice)
 library(mice)
 
 

@@ -32,11 +32,11 @@ This how to use the `tbl_uvsummary` with objects generated from
 `mice::mice`
 
 ``` r
+library(gtsummary)
 library(gtsummary4mice)
 #> Registered S3 method overwritten by 'gtsummary4mice':
 #>   method                from     
 #>   tbl_uvregression.mids gtsummary
-library(gtsummary)
 library(mice)
 #> 
 #> Attaching package: 'mice'
